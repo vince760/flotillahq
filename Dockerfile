@@ -31,6 +31,9 @@ COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/server/package.json ./server/package.json
 COPY --from=build /app/server/dist ./server/dist
 COPY --from=build /app/web/dist ./web/dist
+# The public pages (/about, /privacy, /terms). Google's OAuth reviewer opens
+# these signed out — without them the image builds fine and fails verification.
+COPY --from=build /app/site ./site
 
 # data/ holds the SQLite database. Mount a persistent volume here or a redeploy
 # takes every user's stored connection with it.

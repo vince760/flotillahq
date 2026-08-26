@@ -6,6 +6,9 @@ services:
     runtime: docker
     dockerfilePath: ./Dockerfile
     plan: starter # a persistent disk requires a paid instance
+    # Pick a region before the first deploy - it cannot be changed afterwards.
+    # frankfurt keeps EU user data in the EU, which simplifies GDPR transfers.
+    region: oregon
     healthCheckPath: /healthz
     autoDeploy: false
 
