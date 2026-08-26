@@ -1,0 +1,208 @@
+<!doctype html>
+<!--
+  REPLACE BEFORE PUBLISHING (see site/README.md):
+    flotillahq.com   -> your real domain
+    you@example.com   -> your support contact address
+    Your Company      -> the legal entity or your own name
+    [EFFECTIVE DATE]  -> the date you publish this
+
+  This is an accurate description of what the application actually does, written
+  to satisfy Google's OAuth verification requirements. It is not legal advice —
+  have it reviewed before you rely on it.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Privacy Policy — Flotilla</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site">
+        <span class="name"><a href="/" style="color: inherit; text-decoration: none">Flotilla</a></span>
+        <span class="tag">every Google Analytics property, one screen</span>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/terms.html">Terms</a>
+        </nav>
+      </header>
+
+      <h1>Privacy Policy</h1>
+      <p class="meta">Effective [EFFECTIVE DATE]. Applies to Flotilla at flotillahq.com.</p>
+
+      <p class="lead">
+        Flotilla reads your Google Analytics data so it can show it back to you on one
+        screen. It does nothing else with it. This policy sets out exactly what is accessed,
+        what is kept, and how to remove it.
+      </p>
+
+      <h2>Who we are</h2>
+      <p>
+        Flotilla is operated by Your Company. For any privacy question or request,
+        contact <a href="mailto:you@example.com">you@example.com</a>.
+      </p>
+
+      <h2>What we access from Google</h2>
+      <table>
+        <thead>
+          <tr><th>Scope</th><th>What it allows</th><th>Why we need it</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>analytics.readonly</code></td>
+            <td>Read-only access to your Google Analytics accounts, properties and reports.</td>
+            <td>To list the properties you can access and read the live and historical figures the dashboard displays. There is no way to build the product without it.</td>
+          </tr>
+          <tr>
+            <td><code>openid</code>, <code>email</code>, <code>profile</code></td>
+            <td>Your Google account identifier, email address and name.</td>
+            <td>To identify your account so your settings and connection belong to you and not to another user.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        The Analytics permission is <strong>read-only</strong>. Flotilla cannot create,
+        modify or delete anything in your Google Analytics account.
+      </p>
+
+      <h2>What we store</h2>
+      <table>
+        <thead>
+          <tr><th>Data</th><th>Kept</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Google account identifier, email address, name</td>
+            <td>Until you delete your account</td>
+            <td>Identifying your account</td>
+          </tr>
+          <tr>
+            <td>Google OAuth refresh and access tokens</td>
+            <td>Until you disconnect or delete your account</td>
+            <td>Reading your Analytics data without asking you to sign in repeatedly. <strong>Encrypted at rest</strong> using AES-256-GCM.</td>
+          </tr>
+          <tr>
+            <td>Session identifier</td>
+            <td>30 days, or until you sign out</td>
+            <td>Keeping you signed in</td>
+          </tr>
+          <tr>
+            <td>Your Analytics property identifiers</td>
+            <td>Until you delete your account</td>
+            <td>Keeping each property's colour stable between visits</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>What we do not store</h3>
+      <p>
+        <strong>Your Google Analytics report data is never written to disk.</strong> Figures are
+        fetched from Google when you open the dashboard, held briefly in memory to avoid
+        re-requesting the same numbers, and discarded. We keep no historical copy of your
+        analytics, and no record of your visitors.
+      </p>
+
+      <h2>How we use it</h2>
+      <p>
+        Solely to operate the dashboard for you. Specifically, we do <strong>not</strong>:
+      </p>
+      <ul>
+        <li>sell, rent or trade your data;</li>
+        <li>use it for advertising, profiling or retargeting;</li>
+        <li>use it to train machine learning or AI models;</li>
+        <li>share it with third parties, other than the infrastructure providers who host the service on our behalf;</li>
+        <li>allow any human to read your Google user data, except where you have explicitly asked us to for support, where it is required by law, or where it is necessary for security purposes such as investigating abuse.</li>
+      </ul>
+
+      <div class="card">
+        <h3>Limited Use disclosure</h3>
+        <p>
+          Flotilla's use and transfer of information received from Google APIs to any other
+          app will adhere to the
+          <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noreferrer">Google API Services User Data Policy</a>,
+          including the Limited Use requirements.
+        </p>
+      </div>
+
+      <h2>Who else sees it</h2>
+      <p>
+        Flotilla runs on third-party hosting infrastructure, which necessarily stores the
+        application's database on our behalf. Those providers act as processors and do not use
+        your data for their own purposes. We do not use third-party analytics, advertising or
+        tracking services on the application itself.
+      </p>
+
+      <h2>Security</h2>
+      <ul>
+        <li>Google refresh tokens are encrypted at rest with AES-256-GCM; the key is held separately from the database.</li>
+        <li>All traffic is served over HTTPS, and session cookies are HTTP-only, SameSite and Secure.</li>
+        <li>Sign-in uses Google OAuth 2.0. We never see, ask for, or store your Google password.</li>
+      </ul>
+      <p>
+        No system is perfectly secure, but the design goal is that a copy of the database alone is
+        not enough to reach anyone's Google account.
+      </p>
+
+      <h2>Your choices</h2>
+      <ul>
+        <li>
+          <strong>Download your data.</strong> <em>Export my data</em>, in the footer of the app,
+          gives you everything we hold about you as a JSON file. Live credentials are
+          deliberately excluded — including them in a downloadable file would put your Google
+          account at risk — but their existence and the scopes you granted are listed.
+        </li>
+        <li>
+          <strong>Disconnect Google.</strong> The <em>Disconnect</em> button in the app revokes our
+          access with Google and deletes the stored tokens immediately.
+        </li>
+        <li>
+          <strong>Delete your account.</strong> <em>Delete account</em>, in the footer of the app,
+          removes your account, tokens, sessions and settings entirely, and revokes our access
+          with Google. It cannot be undone.
+        </li>
+        <li>
+          <strong>Revoke from Google directly.</strong> You can remove access at any time at
+          <a href="https://myaccount.google.com/permissions" target="_blank" rel="noreferrer">myaccount.google.com/permissions</a>.
+        </li>
+        <li>
+          <strong>Ask us.</strong> Email <a href="mailto:you@example.com">you@example.com</a> to
+          request access to, correction of, or deletion of your data.
+        </li>
+      </ul>
+
+      <h2>Retention</h2>
+      <p>
+        Account data is kept until you delete your account. Disconnecting removes tokens straight
+        away. Expired sessions are cleared automatically.
+      </p>
+
+      <h2>International users</h2>
+      <p>
+        Data may be processed in the country where our hosting provider operates. By using the
+        service you consent to that processing. If you are in the EEA or UK, our lawful basis is
+        performing the contract you enter into by using the service, and you retain the rights of
+        access, rectification, erasure, restriction, portability and objection — exercisable at
+        the contact address above.
+      </p>
+
+      <h2>Children</h2>
+      <p>Flotilla is a tool for website owners and is not directed at children under 13.</p>
+
+      <h2>Changes</h2>
+      <p>
+        If this policy changes materially, we will update the effective date above and notify
+        signed-in users before the change takes effect.
+      </p>
+
+      <footer class="site">
+        <p>
+          &copy; Your Company ·
+          <a href="/">Home</a> ·
+          <a href="/terms.html">Terms of service</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

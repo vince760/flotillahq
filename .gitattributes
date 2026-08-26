@@ -1,0 +1,9 @@
+# Normalise line endings so a Windows checkout and a Linux container build
+# produce identical files — the Docker build runs on Linux.
+* text=auto eol=lf
+
+# Never mangle binaries.
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary

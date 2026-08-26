@@ -1,0 +1,101 @@
+<!doctype html>
+<!--
+  REPLACE BEFORE PUBLISHING (see site/README.md):
+    flotillahq.com   -> your real domain
+    you@example.com   -> your support contact address
+    Your Company      -> the legal entity or your own name
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Flotilla — every Google Analytics property on one screen</title>
+    <meta
+      name="description"
+      content="Flotilla shows live viewers from all of your Google Analytics 4 properties on a single world map, with the stats underneath."
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site">
+        <span class="name">Flotilla</span>
+        <span class="tag">every Google Analytics property, one screen</span>
+        <nav>
+          <a href="/privacy.html">Privacy</a>
+          <a href="/terms.html">Terms</a>
+        </nav>
+      </header>
+
+      <h1>Stop switching between Google Analytics properties</h1>
+      <p class="lead">
+        Flotilla signs in with your Google account, finds every Google Analytics 4
+        property you can already read, and puts them all on one screen — live viewers on a
+        world map, with the numbers underneath.
+      </p>
+
+      <h2>What it does</h2>
+      <ul>
+        <li>
+          <strong>One live map.</strong> Viewers active in the last 30 minutes, plotted by city
+          and sized by how many are there. Each property gets its own colour and marker shape, so
+          you can tell them apart at a glance.
+        </li>
+        <li>
+          <strong>Trends underneath.</strong> Users, new users, sessions, page views, engagement
+          rate and average session length for today, 7, 28 or 90 days — each compared against the
+          previous period.
+        </li>
+        <li>
+          <strong>Per property detail.</strong> A card per property with its own trend line, plus
+          top pages and traffic channels across everything you own.
+        </li>
+        <li>
+          <strong>No per-property setup.</strong> Sign in once. Properties you gain access to
+          later show up on their own.
+        </li>
+      </ul>
+
+      <h2>What it accesses, and why</h2>
+      <p>
+        Flotilla requests one Google Analytics permission, and it is read-only:
+      </p>
+      <div class="card">
+        <h3><code>.../auth/analytics.readonly</code></h3>
+        <p>
+          View your Google Analytics data. This is the only way to read the reports the dashboard
+          is made of. Without it there is nothing to show.
+        </p>
+        <p class="meta">
+          It is read-only: Flotilla cannot change, create or delete anything in your
+          Google Analytics account.
+        </p>
+      </div>
+      <p>
+        It also uses your basic Google profile (<code>openid</code>, <code>email</code>,
+        <code>profile</code>) purely to identify your account when you sign in.
+      </p>
+
+      <h2>How your data is handled</h2>
+      <ul>
+        <li>Your Analytics figures are shown to you and are never sold, shared or used for advertising.</li>
+        <li>Reports are held only in memory to serve your dashboard — they are not written to disk.</li>
+        <li>Your Google refresh token is encrypted at rest so a leaked database does not expose your account.</li>
+        <li>You can disconnect Google or delete your account entirely at any time, from inside the app.</li>
+      </ul>
+      <p>The full detail is in the <a href="/privacy.html">privacy policy</a>.</p>
+
+      <h2>Get in touch</h2>
+      <p>Questions, problems, or a deletion request: <a href="mailto:you@example.com">you@example.com</a>.</p>
+
+      <footer class="site">
+        <p>
+          &copy; Your Company ·
+          <a href="/privacy.html">Privacy policy</a> ·
+          <a href="/terms.html">Terms of service</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

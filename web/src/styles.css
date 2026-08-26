@@ -1,0 +1,944 @@
+/* ---------------------------------------------------------------------------
+   Tokens. Light is defined on bare :root; dark is redefined under both the OS
+   media query and the explicit [data-theme] stamp, so the in-app toggle wins in
+   both directions.
+   --------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --page: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --surface-2: #f2f1ed;
+
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --muted: #898781;
+
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.1);
+
+  --land: #ecebe5;
+  --land-stroke: #dcdbd3;
+
+  --good: #0ca30c;
+  --critical: #d03b3b;
+  --success-text: #006300;
+
+  --series-1: #2a78d6;
+  --series-2: #eda100;
+  --series-3: #e87ba4;
+  --series-4: #008300;
+
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(11, 11, 11, 0.04), 0 1px 8px rgba(11, 11, 11, 0.03);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --surface-2: #232322;
+
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --muted: #898781;
+
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255, 255, 255, 0.1);
+
+    --land: #242423;
+    --land-stroke: #303030;
+
+    --success-text: #0ca30c;
+
+    --series-1: #3987e5;
+    --series-2: #c98500;
+    --series-3: #d55181;
+    --series-4: #008300;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 8px rgba(0, 0, 0, 0.25);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --page: #0d0d0d;
+  --surface-1: #1a1a19;
+  --surface-2: #232322;
+
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --muted: #898781;
+
+  --grid: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255, 255, 255, 0.1);
+
+  --land: #242423;
+  --land-stroke: #303030;
+
+  --success-text: #0ca30c;
+
+  --series-1: #3987e5;
+  --series-2: #c98500;
+  --series-3: #d55181;
+  --series-4: #008300;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 8px rgba(0, 0, 0, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--page);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* --- Shell ---------------------------------------------------------------- */
+
+.shell {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px 24px 64px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 18px;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-right: auto;
+}
+
+.brand h1 {
+  font-size: 17px;
+  font-weight: 650;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.brand .sub {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-1);
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.chip.live {
+  color: var(--text-primary);
+}
+
+.pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--good);
+  flex: none;
+}
+
+.pip.beating {
+  animation: beat 2.4s ease-in-out infinite;
+}
+
+@keyframes beat {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pip.beating {
+    animation: none;
+  }
+}
+
+.btn {
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 120ms ease;
+}
+
+.btn:hover {
+  background: var(--surface-2);
+}
+
+.btn.primary {
+  background: var(--series-1);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 550;
+}
+
+.btn.primary:hover {
+  filter: brightness(1.06);
+}
+
+/* --- Sections ------------------------------------------------------------- */
+
+.section {
+  margin-top: 26px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.section-head h2 {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  margin: 0;
+}
+
+.section-head .spacer {
+  margin-left: auto;
+}
+
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Refetch keeps the frame: hold the last render, never flash a skeleton. */
+.stale {
+  opacity: 0.55;
+  transition: opacity 160ms ease;
+}
+
+/* --- Live panel ----------------------------------------------------------- */
+
+.live-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 16px;
+  align-items: stretch;
+}
+
+@media (max-width: 1080px) {
+  .live-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Height comes from CSS, never from the SVG's own aspect ratio: the viewBox is
+   built from the measured box, so a content-driven height would feed back into
+   itself and lock the map to a square. */
+.map-card {
+  position: relative;
+  overflow: hidden;
+  height: clamp(420px, 58vh, 660px);
+}
+
+.map-toolbar {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.icon-btn {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--text-secondary);
+}
+
+.icon-btn:hover {
+  background: var(--surface-2);
+}
+
+.map-svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.map-svg.dragging {
+  cursor: grabbing;
+}
+
+.map-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+/* --- Hero + tiles --------------------------------------------------------- */
+
+.hero {
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero .label {
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  margin-bottom: 2px;
+}
+
+.hero .value {
+  font-size: 52px;
+  line-height: 1.05;
+  font-weight: 640;
+  letter-spacing: -0.025em;
+  /* Proportional figures: tabular-nums makes a big number look loose. */
+}
+
+.hero .note {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.legend {
+  padding: 8px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.legend-row {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.legend-row:hover {
+  background: var(--surface-2);
+}
+
+.legend-row.off {
+  opacity: 0.42;
+}
+
+.legend-row .name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.legend-row .account {
+  display: block;
+  color: var(--muted);
+  font-size: 11.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.legend-row .count {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.legend-foot {
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px 4px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+/* --- Filter row ----------------------------------------------------------- */
+
+.filters {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface-1);
+}
+
+.seg button {
+  border: 0;
+  background: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.seg button + button {
+  border-left: 1px solid var(--border);
+}
+
+.seg button[aria-pressed="true"] {
+  background: var(--surface-2);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* --- Stat tiles ----------------------------------------------------------- */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(184px, 1fr));
+  gap: 12px;
+}
+
+.tile {
+  padding: 14px 16px 12px;
+}
+
+.tile .label {
+  color: var(--text-secondary);
+  font-size: 12.5px;
+}
+
+.tile .value {
+  font-size: 27px;
+  font-weight: 620;
+  letter-spacing: -0.02em;
+  margin-top: 3px;
+}
+
+.tile .delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+
+.delta .arrow {
+  font-size: 11px;
+}
+
+.delta.up {
+  color: var(--success-text);
+}
+
+.delta.down {
+  color: var(--critical);
+}
+
+.delta .vs {
+  color: var(--muted);
+}
+
+/* --- Property cards ------------------------------------------------------- */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+}
+
+.pcard {
+  padding: 14px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pcard-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.pcard-head .title {
+  min-width: 0;
+  flex: 1;
+}
+
+.pcard-head .name {
+  font-weight: 600;
+  font-size: 13.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pcard-head .account {
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.pcard-live {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pcard-live b {
+  font-size: 17px;
+  font-weight: 640;
+}
+
+.pcard-live span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.pcard-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.metric .k {
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.metric .v {
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.pcard-error {
+  color: var(--critical);
+  font-size: 12px;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+/* --- Tables --------------------------------------------------------------- */
+
+.panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 12px;
+}
+
+.panel {
+  padding: 14px 16px 8px;
+}
+
+.panel h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+table.data th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--muted);
+  font-size: 11.5px;
+  padding: 4px 8px 6px 0;
+  border-bottom: 1px solid var(--grid);
+  white-space: nowrap;
+}
+
+table.data td {
+  padding: 6px 8px 6px 0;
+  border-bottom: 1px solid var(--grid);
+  vertical-align: middle;
+}
+
+table.data tr:last-child td {
+  border-bottom: 0;
+}
+
+table.data td.num,
+table.data th.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  padding-right: 0;
+}
+
+table.data td.truncate {
+  max-width: 1px;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.swatch-cell {
+  width: 18px;
+  padding-right: 8px;
+}
+
+/* --- Tooltip -------------------------------------------------------------- */
+
+.tip {
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+  padding: 8px 10px;
+  font-size: 12px;
+  min-width: 132px;
+  max-width: 260px;
+}
+
+.tip .head {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.tip .sub {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 11px;
+}
+
+.tip .row {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  padding: 1.5px 0;
+}
+
+.tip .row .n {
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Values lead, labels follow. */
+.tip .row .v {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Banners -------------------------------------------------------------- */
+
+.banner {
+  padding: 16px 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.banner .body {
+  flex: 1;
+}
+
+.banner h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.banner p {
+  margin: 0 0 4px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.banner code {
+  background: var(--surface-2);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.banner.error {
+  border-left: 3px solid var(--critical);
+}
+
+.empty {
+  padding: 34px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--series-1);
+  outline-offset: 2px;
+}
+
+/* --- Connect / setup panel ------------------------------------------------ */
+
+.setup {
+  padding: 18px 20px 20px;
+  margin-bottom: 16px;
+  max-width: 760px;
+}
+
+.setup-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.setup-head h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.setup-lead {
+  margin: 0 0 12px;
+  color: var(--text-secondary);
+}
+
+.steps {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  color: var(--text-secondary);
+}
+
+.steps li {
+  line-height: 1.55;
+}
+
+.steps b {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.steps a {
+  color: var(--series-1);
+}
+
+.uri-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 7px;
+  flex-wrap: wrap;
+}
+
+.uri-row code {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 9px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.setup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  align-items: flex-start;
+}
+
+.setup-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.setup-form label span {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.setup-form input {
+  font: inherit;
+  font-size: 13px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-primary);
+  width: 100%;
+}
+
+.setup-form button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.setup-error {
+  color: var(--critical);
+  font-size: 12.5px;
+}
+
+.setup-foot {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.setup-head .tag {
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+
+.setup-head .spacer {
+  margin-left: auto;
+}
+
+/* Separates operator-only setup from anything a normal user ever sees. */
+.setup-callout {
+  border-left: 3px solid var(--series-1);
+  background: var(--surface-2);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.setup-callout b {
+  color: var(--text-primary);
+}
+
+/* Policy links, reachable from every page of the dashboard. Google's reviewer
+   looks for these, and users should be able to find them too. */
+.app-foot {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  margin-top: 40px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.app-foot a {
+  color: var(--muted);
+  font-size: 12.5px;
+  text-decoration: none;
+}
+
+.app-foot a:hover {
+  color: var(--text-secondary);
+  text-decoration: underline;
+}
+
+/* A button that reads as a link — the destructive action should not look like a
+   primary call to action sitting in the footer. */
+.app-foot .linklike {
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.app-foot .linklike:hover {
+  color: var(--critical);
+  text-decoration: underline;
+}

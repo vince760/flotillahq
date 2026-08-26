@@ -1,0 +1,30 @@
+{
+  "name": "flotilla",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "One screen for every Google Analytics property: live viewers on a world map, stats underneath.",
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,web -c cyan,magenta \"npm:dev:server\" \"npm:dev:web\"",
+    "dev:server": "npm run dev --workspace server",
+    "dev:web": "npm run dev --workspace web",
+    "dev:mock": "cross-env MOCK=1 npm run dev",
+    "build": "npm run build --workspace web && npm run build --workspace server",
+    "start": "node server/dist/index.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3"
+  },
+  "engines": {
+    "node": ">=20.11"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "esbuild@0.25.12": true
+  }
+}

@@ -1,0 +1,39 @@
+# Render blueprint. Create the service from this file, then set the secret
+# environment variables in the dashboard (they are deliberately not in git).
+services:
+  - type: web
+    name: flotilla
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter # a persistent disk requires a paid instance
+    healthCheckPath: /healthz
+    autoDeploy: false
+
+    disk:
+      name: data
+      # Must match the app's data directory inside the container.
+      mountPath: /app/data
+      sizeGB: 1
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: SECURE_COOKIES
+        value: "1"
+
+      # --- set these in the Render dashboard, never in git -------------------
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      # Generate once and store it. Changing it makes every stored Google token
+      # permanently unreadable and forces all users to reconnect:
+      #   node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+      - key: ENCRYPTION_KEY
+        sync: false
+      # Must exactly match an Authorised redirect URI on the OAuth client:
+      #   https://<your-domain>/api/auth/callback
+      - key: OAUTH_REDIRECT_URI
+        sync: false

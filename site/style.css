@@ -1,0 +1,57 @@
+/* Shared styling for the public pages. Mirrors the app's tokens so the
+   marketing site and the dashboard read as one product. */
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --text: #0b0b0b;
+  --text-2: #52514e;
+  --muted: #898781;
+  --border: rgba(11, 11, 11, 0.1);
+  --accent: #2a78d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --text: #ffffff;
+    --text-2: #c3c2b7;
+    --muted: #898781;
+    --border: rgba(255, 255, 255, 0.1);
+    --accent: #3987e5;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 760px; margin: 0 auto; padding: 40px 24px 80px; }
+header.site { display: flex; align-items: baseline; gap: 12px; padding-bottom: 28px; flex-wrap: wrap; }
+header.site .name { font-size: 18px; font-weight: 650; letter-spacing: -0.01em; }
+header.site .tag { color: var(--muted); font-size: 14px; margin-right: auto; }
+header.site nav a { color: var(--text-2); text-decoration: none; font-size: 14px; margin-left: 16px; }
+header.site nav a:hover { color: var(--text); text-decoration: underline; }
+h1 { font-size: 32px; line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 12px; }
+h2 { font-size: 19px; margin: 34px 0 10px; letter-spacing: -0.01em; }
+h3 { font-size: 16px; margin: 22px 0 6px; }
+p, li { color: var(--text-2); }
+p.lead { font-size: 18px; color: var(--text-2); margin-bottom: 26px; }
+a { color: var(--accent); }
+ul { padding-left: 22px; }
+li { margin: 5px 0; }
+code { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin: 22px 0; }
+.card h3 { margin-top: 0; }
+.meta { color: var(--muted); font-size: 14px; }
+footer.site { border-top: 1px solid var(--border); margin-top: 48px; padding-top: 20px; color: var(--muted); font-size: 14px; }
+footer.site a { color: var(--text-2); }
+table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 15px; }
+th, td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { color: var(--muted); font-weight: 500; font-size: 14px; }

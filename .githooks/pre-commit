@@ -1,0 +1,65 @@
+#!/bin/sh
+# Blocks secrets from entering a public repository.
+#
+# .gitignore only protects files that are untracked. It does nothing about
+# `git add -f`, a credential pasted into a source file, or a renamed .env. This
+# hook inspects the staged *content* instead.
+#
+# Enabled by: git config core.hooksPath .githooks
+# Bypass (deliberately, and only if you are certain): git commit --no-verify
+
+set -e
+RED=$(printf '\033[31m'); YEL=$(printf '\033[33m'); OFF=$(printf '\033[0m')
+fail=0
+
+report() {
+  fail=1
+  printf "%sBLOCKED%s %s\n" "$RED" "$OFF" "$1"
+}
+
+# --- 1. Files that must never be staged, whatever they contain ---------------
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+
+for f in $staged; do
+  case "$f" in
+    .env.example) ;;                                  # the safe template
+    .env|.env.*)          report "$f — environment file" ;;
+    *.key|*.pem|*.p12|*.pfx|*.jks|*.keystore) report "$f — key or certificate" ;;
+    data/*)               report "$f — runtime state (database, encryption key)" ;;
+    *.db|*.sqlite|*.sqlite3) report "$f — database file" ;;
+    *credentials*.json|*client_secret*.json|*service-account*.json)
+                          report "$f — credential file" ;;
+    .claude/*|CLAUDE.md|CLAUDE.local.md|.mcp.json)
+                          report "$f — local assistant configuration" ;;
+  esac
+done
+
+# --- 2. Secret-shaped content anywhere in the staged diff --------------------
+# Patterns are deliberately strict so documentation placeholders such as
+# "GOCSPX-…" or "123456789-abc123.apps.googleusercontent.com" do not trip them.
+scan() {
+  matches=$(git diff --cached -U0 --no-color | grep -nE "^\+" | grep -iE "$1" || true)
+  if [ -n "$matches" ]; then
+    report "$2"
+    printf "        %s\n" "$(printf '%s' "$matches" | head -3 | cut -c1-110)"
+  fi
+}
+
+scan 'GOCSPX-[A-Za-z0-9_-]{8,}'                       "Google OAuth client secret"
+scan '[0-9]{10,}-[a-z0-9]{16,}\.apps\.googleusercontent\.com' "real Google OAuth client ID"
+scan 'BEGIN [A-Z ]*PRIVATE KEY'                        "private key block"
+scan '1//0[A-Za-z0-9_-]{20,}'                          "Google refresh token"
+scan 'AIza[0-9A-Za-z_-]{35}'                           "Google API key"
+scan '(ENCRYPTION_KEY|SECRET|PASSWORD|TOKEN)[[:space:]]*[=:][[:space:]]*["'"'"']?[A-Za-z0-9+/]{32,}' \
+     "hard-coded secret assignment"
+scan 'xox[baprs]-[A-Za-z0-9-]{10,}'                    "Slack token"
+scan 'gh[pousr]_[A-Za-z0-9]{30,}'                      "GitHub token"
+
+if [ "$fail" -ne 0 ]; then
+  printf "\n%sCommit refused.%s This repository is public.\n" "$RED" "$OFF"
+  printf "Unstage the offending change, or if it is genuinely a placeholder:\n"
+  printf "  %sgit commit --no-verify%s\n\n" "$YEL" "$OFF"
+  exit 1
+fi
+
+exit 0

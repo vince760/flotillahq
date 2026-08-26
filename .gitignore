@@ -1,0 +1,88 @@
+# =============================================================================
+# Secrets — this is a public repository. Nothing here may ever be committed.
+# =============================================================================
+# .env holds the Google client secret. Every variant is ignored and the safe
+# template is re-included explicitly, so a new .env.production cannot slip in.
+.env
+.env.*
+!.env.example
+
+# Keys, certificates and credential files, wherever they end up.
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+*credentials*.json
+*client_secret*.json
+*service-account*.json
+secrets/
+.secrets/
+
+# =============================================================================
+# Runtime state
+# =============================================================================
+# The whole directory, deliberately, not file-by-file: it holds the SQLite
+# database and the encryption key, and a new file appearing here must never be
+# committed by accident.
+data/
+
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# =============================================================================
+# Claude Code and other AI tooling
+# =============================================================================
+# Project-local Claude state can contain machine paths, permissions and notes
+# that have no business in a public repo.
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.mcp.json
+
+# Other assistants, for the same reason.
+.cursor/
+.cursorrules
+.aider*
+.continue/
+.windsurfrules
+.github/copilot-instructions.md
+
+# =============================================================================
+# Dependencies and build output
+# =============================================================================
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+.vite/
+.cache/
+
+# =============================================================================
+# Editors and operating systems
+# =============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =============================================================================
+# Logs, coverage, temporary files
+# =============================================================================
+*.log
+npm-debug.log*
+yarn-error.log*
+coverage/
+.nyc_output/
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
