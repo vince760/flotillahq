@@ -10,23 +10,24 @@ terms.html    Terms of service
 style.css     Shared styling, matching the app
 ```
 
-## Replace before publishing
+## Placeholders (filled 26 Aug 2026)
 
-Every file has these placeholders. Search the folder and replace all of them:
+These were the placeholders. They are now filled in, with the values below. The
+table is kept so the substitutions are documented rather than mysterious:
 
-| Placeholder | Replace with |
+| Placeholder | Now reads |
 |---|---|
 | `flotillahq.com` | The domain you will verify with Google |
-| `you@example.com` | A support address you actually monitor |
-| `Your Company` | The legal entity, or your own name |
-| `[EFFECTIVE DATE]` | The date you publish |
-| `[JURISDICTION]` | The governing law for the terms |
+| `you@example.com` | hello@lotsmith.co |
+| `Your Company` | Vincent Vitale (sole trader) |
+| `[EFFECTIVE DATE]` | 26 August 2026 |
+| `[JURISDICTION]` | the State of California, United States |
 
 ```bash
 grep -rn "flotillahq.com\|you@example.com\|Your Company\|\[EFFECTIVE DATE\]\|\[JURISDICTION\]" site/
 ```
 
-That grep must return nothing before you submit for verification.
+That grep must keep returning nothing. It only scans the pages, not this file.
 
 **These are not legal advice.** The privacy policy is an accurate description of
 what the application genuinely does - worth more to a reviewer than a generic
