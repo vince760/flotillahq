@@ -32,6 +32,13 @@ CREATE ROLE flotilla_app WITH
 
 COMMENT ON ROLE flotilla_app IS 'Application role for Flotilla. Owns the flotilla database only.';
 
+-- Assigning ownership to another role requires being a member of it (or being
+-- a superuser). A non-superuser with CREATEROLE does not automatically become
+-- a member of the roles it creates before Postgres 16, which fails with
+--   ERROR: must be able to SET ROLE "flotilla_app"
+-- Replace the role name below with whoever you are connected as.
+GRANT flotilla_app TO CURRENT_USER;
+
 CREATE DATABASE flotilla
   OWNER flotilla_app
   ENCODING 'UTF8';
@@ -54,12 +61,17 @@ REVOKE ALL ON DATABASE directjobsource_db FROM flotilla_app;
 -- ===========================================================================
 -- In pgAdmin: expand Databases -> right-click `flotilla` -> Query Tool.
 
--- The application creates its own tables on first start, so it needs ownership
--- of the schema it will use. Postgres 15+ already removes CREATE from PUBLIC;
--- these statements make that explicit and are safe on older versions too.
+-- On Postgres 15 and later the public schema is owned by pg_database_owner,
+-- which resolves to whoever owns the database — so flotilla_app already owns it
+-- and this whole part is a no-op. Run it anyway on older servers; if a statement
+-- errors with "must be owner of schema public", you are on 15+ and can skip it.
 ALTER SCHEMA public OWNER TO flotilla_app;
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO flotilla_app;
+
+-- Confirm the app will be able to create its tables. Both should be true.
+SELECT has_schema_privilege('flotilla_app', 'public', 'CREATE') AS can_create,
+       has_schema_privilege('flotilla_app', 'public', 'USAGE')  AS can_use;
 
 
 -- ===========================================================================
