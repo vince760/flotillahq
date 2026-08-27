@@ -31,9 +31,10 @@ services:
       # otherwise collide with whatever else uses the database.
       - key: DATABASE_SCHEMA
         value: public
-      # Render's internal database URLs do not use TLS.
+      # Managed Postgres requires TLS, on the internal URL as well as the
+      # external one. Only a local database should ever set this to 0.
       - key: DATABASE_SSL
-        value: "0"
+        value: "1"
       - key: DATABASE_POOL_MAX
         value: "5"
 

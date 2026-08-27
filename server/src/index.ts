@@ -347,8 +347,9 @@ const server = app.listen(env.port, env.host, async () => {
     console.error("[flotilla] Could not reach the database: " + detail);
     if (process.env.DATABASE_URL) {
       console.error(
-        "[flotilla] Check DATABASE_URL and DATABASE_SSL agree. A managed host's " +
-          "external URL needs DATABASE_SSL=1; its internal URL needs DATABASE_SSL=0.",
+        "[flotilla] If this says SSL/TLS required, set DATABASE_SSL=1. Managed " +
+          "Postgres requires TLS on internal and external URLs alike; only a " +
+          "local database should use 0.",
       );
     }
     process.exit(1);
