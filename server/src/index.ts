@@ -335,9 +335,24 @@ app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
 const server = app.listen(env.port, env.host, async () => {
   console.log("[flotilla] listening on http://localhost:" + env.port + " (storage: " + storageKind() + ")");
 
-  const storage = await getStorage();
-  const purged = await storage.deleteExpiredSessions();
-  if (purged > 0) console.log("[flotilla] cleared " + purged + " expired sessions");
+  // Without this catch a failed database connection becomes an unhandled
+  // rejection, which kills the process: the platform then restart-loops while
+  // showing a stack trace instead of the actual problem.
+  try {
+    const storage = await getStorage();
+    const purged = await storage.deleteExpiredSessions();
+    if (purged > 0) console.log("[flotilla] cleared " + purged + " expired sessions");
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err);
+    console.error("[flotilla] Could not reach the database: " + detail);
+    if (process.env.DATABASE_URL) {
+      console.error(
+        "[flotilla] Check DATABASE_URL and DATABASE_SSL agree. A managed host's " +
+          "external URL needs DATABASE_SSL=1; its internal URL needs DATABASE_SSL=0.",
+      );
+    }
+    process.exit(1);
+  }
 
   if (!isOAuthConfigured()) {
     console.log("[flotilla] No OAuth client yet - click Connect in the UI to set one up.");
