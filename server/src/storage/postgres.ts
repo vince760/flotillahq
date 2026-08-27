@@ -40,18 +40,21 @@ export class PostgresStorage implements Storage {
       idleTimeoutMillis: 30_000,
       connectionTimeoutMillis: 10_000,
       ssl: needsSsl(this.connectionString) ? { rejectUnauthorized: false } : undefined,
+      // search_path is set as a connection startup parameter, applied by the
+      // server before the connection is usable. Doing it in an on("connect")
+      // handler instead would race: that handler is not awaited, so the first
+      // real query can reach the wrong schema. The name is validated as a plain
+      // identifier in the constructor, so it is safe to interpolate here.
+      options: `-c search_path=${this.schema}`,
     });
 
-    // Every pooled connection must see this app's schema, not the default one.
-    this.pool.on("connect", (client) => {
-      void client.query(`SET search_path TO "${this.schema}"`);
-    });
     this.pool.on("error", (err) => {
       console.error("[flotilla] idle postgres client error", err);
     });
 
+    // The schema has to exist before any pooled connection resolves it, and a
+    // connection whose search_path names a missing schema still works for this.
     await this.pool.query(`CREATE SCHEMA IF NOT EXISTS "${this.schema}"`);
-    await this.pool.query(`SET search_path TO "${this.schema}"`);
 
     // BIGINT for epoch millis: Postgres INTEGER overflows in 2038. pg returns
     // BIGINT as a string, so every read goes through Number().
