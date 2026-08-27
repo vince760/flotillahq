@@ -5,18 +5,19 @@ services:
     name: flotilla
     runtime: docker
     dockerfilePath: ./Dockerfile
-    plan: starter # a persistent disk requires a paid instance
+
+    # Free works because state lives in Postgres, not on local disk. Note that a
+    # free service sleeps when idle, so the first request after a quiet period
+    # takes roughly a minute. Move to a paid instance to remove that.
+    plan: free
+
     # Pick a region before the first deploy - it cannot be changed afterwards.
-    # frankfurt keeps EU user data in the EU, which simplifies GDPR transfers.
+    # Match the region of the database you are sharing, or every query pays a
+    # cross-region round trip.
     region: oregon
+
     healthCheckPath: /healthz
     autoDeploy: false
-
-    disk:
-      name: data
-      # Must match the app's data directory inside the container.
-      mountPath: /app/data
-      sizeGB: 1
 
     envVars:
       - key: NODE_ENV
@@ -26,7 +27,22 @@ services:
       - key: SECURE_COOKIES
         value: "1"
 
+      # Own schema, because this app's `users` and `sessions` tables would
+      # otherwise collide with whatever else uses the database.
+      - key: DATABASE_SCHEMA
+        value: public
+      # Render's internal database URLs do not use TLS.
+      - key: DATABASE_SSL
+        value: "0"
+      - key: DATABASE_POOL_MAX
+        value: "5"
+
       # --- set these in the Render dashboard, never in git -------------------
+      # Internal Database URL of the Postgres instance you already run. Use the
+      # internal URL when the service and database share a region.
+      - key: DATABASE_URL
+        sync: false
+
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET
@@ -37,6 +53,6 @@ services:
       - key: ENCRYPTION_KEY
         sync: false
       # Must exactly match an Authorised redirect URI on the OAuth client:
-      #   https://<your-domain>/api/auth/callback
+      #   https://flotillahq.com/api/auth/callback
       - key: OAUTH_REDIRECT_URI
         sync: false

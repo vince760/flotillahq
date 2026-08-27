@@ -25,7 +25,7 @@ import {
   startSession,
   takeOAuthState,
 } from "./session.js";
-import { getStorage } from "./storage/index.js";
+import { getStorage, storageKind } from "./storage/index.js";
 import { rateLimit, securityHeaders } from "./hardening.js";
 import type { Property, PropertySummary, StatsPayload } from "./types.js";
 
@@ -333,7 +333,7 @@ app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
 // -- Startup -----------------------------------------------------------------
 
 const server = app.listen(env.port, env.host, async () => {
-  console.log("[flotilla] listening on http://localhost:" + env.port);
+  console.log("[flotilla] listening on http://localhost:" + env.port + " (storage: " + storageKind() + ")");
 
   const storage = await getStorage();
   const purged = await storage.deleteExpiredSessions();

@@ -1,13 +1,17 @@
+import { PostgresStorage } from "./postgres.js";
 import { SqliteStorage } from "./sqlite.js";
 import type { Storage } from "./types.js";
 
-export type { GoogleTokens, Session, Storage, User } from "./types.js";
+export type { GoogleTokens, Session, Storage, User, UserExport } from "./types.js";
 
 /**
- * The one place that decides which adapter is in use. Adding Postgres means
- * adding a branch here and a file next to sqlite.ts — nothing else changes.
+ * The one place that decides which adapter is in use.
+ *
+ * DATABASE_URL wins when present, so production can share an existing Postgres
+ * server while local development stays on a zero-setup SQLite file.
  */
 export function createStorage(): Storage {
+  if (process.env.DATABASE_URL) return new PostgresStorage();
   return new SqliteStorage();
 }
 
@@ -20,3 +24,6 @@ export async function getStorage(): Promise<Storage> {
   }
   return instance;
 }
+
+/** Which adapter is active — reported at startup so it is never a guess. */
+export const storageKind = () => (process.env.DATABASE_URL ? "postgres" : "sqlite");
