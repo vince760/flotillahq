@@ -69,7 +69,7 @@ export const isOAuthConfigured = () => Boolean(env.clientId && env.clientSecret)
 
 /**
  * Re-read the OAuth client from the env file. Editing .env by hand should take
- * effect on save — needing a restart, with no feedback that one was needed, is
+ * effect on save - needing a restart, with no feedback that one was needed, is
  * exactly the trap that wastes an afternoon.
  *
  * Returns true when the credentials actually changed.
@@ -79,7 +79,7 @@ export function reloadOAuthFromFile(): boolean {
   try {
     parsed = parseEnv(fs.readFileSync(env.envFile, "utf8"));
   } catch {
-    return false; // file removed or unreadable — keep what we have
+    return false; // file removed or unreadable - keep what we have
   }
 
   const clientId = (parsed.GOOGLE_CLIENT_ID ?? "").trim();

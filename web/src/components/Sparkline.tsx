@@ -25,7 +25,7 @@ export function Sparkline({ values, labels, color, height = 46, unit = "users", 
 
   const x = (i: number) =>
     PAD + (values.length <= 1 ? inner.w / 2 : (i / (values.length - 1)) * inner.w);
-  // Counts sit on a zero baseline — anything else overstates the swing.
+  // Counts sit on a zero baseline - anything else overstates the swing.
   const y = (v: number) => PAD + inner.h - (v / max) * inner.h;
 
   const line = values.map((v, i) => (i === 0 ? "M" : "L") + x(i) + "," + y(v)).join(" ");

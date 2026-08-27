@@ -1,6 +1,6 @@
 /** Compact for display (1,284 / 12.9K / 4.2M), full precision on hover. */
 export function compact(value: number): string {
-  if (!Number.isFinite(value)) return "—";
+  if (!Number.isFinite(value)) return "-";
   const n = Math.round(value);
   if (Math.abs(n) < 10000) return n.toLocaleString();
   if (Math.abs(n) < 1_000_000) return (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1) + "K";
@@ -8,7 +8,7 @@ export function compact(value: number): string {
 }
 
 export const full = (value: number): string =>
-  Number.isFinite(value) ? Math.round(value).toLocaleString() : "—";
+  Number.isFinite(value) ? Math.round(value).toLocaleString() : "-";
 
 export function duration(seconds: number): string {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0s";
@@ -19,7 +19,7 @@ export function duration(seconds: number): string {
 }
 
 export const percent = (ratio: number): string =>
-  Number.isFinite(ratio) ? (ratio * 100).toFixed(1) + "%" : "—";
+  Number.isFinite(ratio) ? (ratio * 100).toFixed(1) + "%" : "-";
 
 export type Delta = { text: string; direction: "up" | "down" | "flat" };
 
@@ -50,6 +50,6 @@ export function bucketLabel(bucket: string, dimension: "date" | "hour"): string 
 export function clockTime(iso: string): string {
   const d = new Date(iso);
   return Number.isNaN(d.getTime())
-    ? "—"
+    ? "-"
     : d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 }

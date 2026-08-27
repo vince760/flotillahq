@@ -3,8 +3,8 @@ import { configureOAuth, type Status } from "../api";
 
 /**
  * Everything needed to go from a fresh clone to live data, in the app itself.
- * The Google Cloud steps cannot be automated away — an OAuth client is required
- * to read the Analytics APIs — but nothing here should send anyone hunting
+ * The Google Cloud steps cannot be automated away - an OAuth client is required
+ * to read the Analytics APIs - but nothing here should send anyone hunting
  * through a README for the redirect URI.
  */
 export function ConnectPanel({
@@ -58,7 +58,7 @@ export function ConnectPanel({
     }
   }
 
-  // Deployed instances take credentials from the environment only — the panel
+  // Deployed instances take credentials from the environment only - the panel
   // writes a file on the server, which has no business being reachable remotely.
   if (!status.oauthConfigured && !status.setupUiAvailable) {
     return (
@@ -95,7 +95,7 @@ export function ConnectPanel({
         </div>
         <p className="setup-lead">
           Sign in with the Google account that can see your Analytics properties. Every GA4 property
-          it can read is picked up automatically — nothing else to set up.
+          it can read is picked up automatically - nothing else to set up.
         </p>
         <a className="btn primary" href="/api/auth/login">
           Sign in with Google
@@ -118,7 +118,7 @@ export function ConnectPanel({
       <div className="setup-callout">
         <b>Your users never see this screen.</b> This is the one-time OAuth client for the whole
         deployment. Once it is saved, everyone who visits just gets a{" "}
-        <b>Sign in with Google</b> button — no Cloud Console, no API setup, nothing to configure.
+        <b>Sign in with Google</b> button - no Cloud Console, no API setup, nothing to configure.
       </div>
 
       <p className="setup-lead">
@@ -131,8 +131,8 @@ export function ConnectPanel({
           <b>Create a project</b> at{" "}
           <a href="https://console.cloud.google.com/projectcreate" target="_blank" rel="noreferrer">
             console.cloud.google.com
-          </a>{" "}
-          — or reuse any existing one.
+          </a>
+          , or reuse any existing one.
         </li>
         <li>
           <b>Enable both APIs:</b>{" "}
@@ -163,14 +163,14 @@ export function ConnectPanel({
             here
           </a>
           ): user type <b>External</b>, then add your own Google account under <b>Test users</b>.
-          Leaving it in "Testing" is fine — no Google review needed.
+          Leaving it in "Testing" is fine - no Google review needed.
         </li>
         <li>
           <b>Add the Analytics scope</b> under{" "}
           <a href="https://console.cloud.google.com/auth/scopes" target="_blank" rel="noreferrer">
             Data Access
-          </a>{" "}
-          — this step is easy to miss, and without it Google signs you in but hands back no
+          </a>
+          . This one is easy to miss, and without it Google signs you in but hands back no
           Analytics access at all:
           <div className="uri-row">
             <code>https://www.googleapis.com/auth/analytics.readonly</code>
@@ -188,7 +188,7 @@ export function ConnectPanel({
           >
             here
           </a>
-          ): type <b>Web application</b>. Under <b>Authorised redirect URIs</b> add exactly this —
+          ): type <b>Web application</b>. Under <b>Authorised redirect URIs</b> add exactly this -
           it must match character for character:
           <div className="uri-row">
             <code>{redirectUri}</code>
@@ -235,7 +235,7 @@ export function ConnectPanel({
 
       <p className="setup-foot">
         Prefer the command line? Put the same two values in <code>.env</code> as{" "}
-        <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> — <code>npm run dev</code>{" "}
+        <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> - <code>npm run dev</code>{" "}
         watches that file and picks them up on save.
       </p>
     </div>

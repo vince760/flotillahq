@@ -21,7 +21,7 @@ const norm = (s: string) =>
 
 /**
  * Google Analytics uses its own place names; GeoNames uses others. Most gaps
- * close via the "City"-suffix and prefix rules below — these are the ones that
+ * close via the "City"-suffix and prefix rules below - these are the ones that
  * don't, because the two sources picked genuinely different names.
  */
 const ALIASES: Record<string, string> = {
@@ -66,7 +66,7 @@ type Index = {
 
 let index: Index | null = null;
 
-/** Built once, on the first geo lookup — parsing 135k cities is ~200ms. */
+/** Built once, on the first geo lookup - parsing 135k cities is ~200ms. */
 function build(): Index {
   const exact = new Map<string, Coords & { pop: number }>();
   const byCountry = new Map<string, { key: string; lat: number; lng: number; pop: number }[]>();

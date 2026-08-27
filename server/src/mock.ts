@@ -11,7 +11,7 @@ import type {
 
 /**
  * Everything below feeds MOCK=1 mode, which runs the entire dashboard without a
- * Google account. It is the demo path and the manual test fixture — nothing here
+ * Google account. It is the demo path and the manual test fixture - nothing here
  * is used when real credentials are configured.
  */
 

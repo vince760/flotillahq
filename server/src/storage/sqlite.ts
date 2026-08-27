@@ -6,7 +6,7 @@ import { decrypt, encrypt, token } from "../crypto.js";
 import type { GoogleTokens, Session, Storage, User, UserExport } from "./types.js";
 
 /**
- * SQLite adapter, on Node's built-in driver — no native module to compile.
+ * SQLite adapter, on Node's built-in driver - no native module to compile.
  * Comfortably handles thousands of users on one box; swap the adapter for
  * Postgres when a single writer stops being enough.
  */

@@ -12,7 +12,7 @@ import type { GoogleTokens, Session, Storage, User, UserExport } from "./types.j
  * DATABASE_SCHEMA exists for the other case: sharing a database with another
  * application. This app owns tables called `users` and `sessions`, which would
  * collide with almost anything else, and a named schema separates them without
- * needing CREATE DATABASE rights — which managed hosts often withhold.
+ * needing CREATE DATABASE rights - which managed hosts often withhold.
  */
 export class PostgresStorage implements Storage {
   private pool!: Pool;
@@ -35,7 +35,7 @@ export class PostgresStorage implements Storage {
     this.pool = new Pool({
       connectionString: this.connectionString,
       // Shared instances have a modest connection cap, and this app is
-      // read-heavy with tiny queries — a big pool would starve the neighbours.
+      // read-heavy with tiny queries - a big pool would starve the neighbours.
       max: Number(process.env.DATABASE_POOL_MAX ?? 5),
       idleTimeoutMillis: 30_000,
       connectionTimeoutMillis: 10_000,
@@ -304,7 +304,7 @@ function toUser(row: Record<string, unknown>): User {
   };
 }
 
-/** Schema names are interpolated, not parameterised — allow a safe subset only. */
+/** Schema names are interpolated, not parameterised - allow a safe subset only. */
 function sanitiseSchema(name: string): string {
   if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) {
     throw new Error(

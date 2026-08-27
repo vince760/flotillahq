@@ -59,7 +59,7 @@ export type Status = {
   signedIn: boolean;
   /** This account has usable Google Analytics credentials stored. */
   connected: boolean;
-  /** Serving generated data — never true once connected. */
+  /** Serving generated data - never true once connected. */
   mock: boolean;
   oauthConfigured: boolean;
   /** False on deployed instances: credentials must come from the environment. */

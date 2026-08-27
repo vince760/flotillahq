@@ -110,7 +110,7 @@ export async function listProperties(token: string): Promise<PropertySummary[]> 
   return found;
 }
 
-/** Run tasks with bounded concurrency — Google caps concurrent Data API requests. */
+/** Run tasks with bounded concurrency - Google caps concurrent Data API requests. */
 async function pool<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>): Promise<R[]> {
   const results = new Array<R>(items.length);
   let cursor = 0;
@@ -182,7 +182,7 @@ export async function fetchPropertyRealtime(
 
     // activeUsers counts the last 30 minutes, so zero here means every minute in
     // the pulse is also zero. Skipping that second call is lossless, and it
-    // halves the request cost of an idle property — which most are, most of the
+    // halves the request cost of an idle property - which most are, most of the
     // time.
     if (activeUsers > 0) {
       const pulse = await gaFetch<Report>(token, url, {

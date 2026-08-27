@@ -56,7 +56,7 @@ export interface Storage {
   upsertUser(googleSub: string, email: string, name: string | null): Promise<User>;
   getUser(id: string): Promise<User | null>;
 
-  /** Refresh tokens are credentials — adapters must store them encrypted. */
+  /** Refresh tokens are credentials - adapters must store them encrypted. */
   saveTokens(userId: string, tokens: GoogleTokens): Promise<void>;
   getTokens(userId: string): Promise<GoogleTokens | null>;
   deleteTokens(userId: string): Promise<void>;
@@ -75,6 +75,6 @@ export interface Storage {
   /** Everything held about this user, for a subject access request. */
   exportUser(userId: string): Promise<UserExport | null>;
 
-  /** Full erasure — required by Google's user data policy. */
+  /** Full erasure - required by Google's user data policy. */
   deleteUser(userId: string): Promise<void>;
 }

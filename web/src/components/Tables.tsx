@@ -192,14 +192,14 @@ export function TotalsTable({
                     <Swatch identity={identityFor(property.slot)} size={12} />
                   </td>
                   <td style={{ whiteSpace: "nowrap" }}>{property.name}</td>
-                  <td className="num">{stat ? full(stat.current.activeUsers) : "—"}</td>
-                  <td className="num">{stat ? full(stat.previous.activeUsers) : "—"}</td>
-                  <td className="num">{stat ? full(stat.current.newUsers) : "—"}</td>
-                  <td className="num">{stat ? full(stat.current.sessions) : "—"}</td>
-                  <td className="num">{stat ? full(stat.current.screenPageViews) : "—"}</td>
-                  <td className="num">{stat ? percent(stat.current.engagementRate) : "—"}</td>
+                  <td className="num">{stat ? full(stat.current.activeUsers) : "-"}</td>
+                  <td className="num">{stat ? full(stat.previous.activeUsers) : "-"}</td>
+                  <td className="num">{stat ? full(stat.current.newUsers) : "-"}</td>
+                  <td className="num">{stat ? full(stat.current.sessions) : "-"}</td>
+                  <td className="num">{stat ? full(stat.current.screenPageViews) : "-"}</td>
+                  <td className="num">{stat ? percent(stat.current.engagementRate) : "-"}</td>
                   <td className="num">
-                    {stat ? duration(stat.current.averageSessionDuration) : "—"}
+                    {stat ? duration(stat.current.averageSessionDuration) : "-"}
                   </td>
                 </tr>
               );

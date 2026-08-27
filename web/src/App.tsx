@@ -176,7 +176,7 @@ export default function App() {
       return next;
     });
 
-  /** Retry means retry everything — the failure could be in any of the three. */
+  /** Retry means retry everything - the failure could be in any of the three. */
   const retryAll = useCallback(async () => {
     setError(null);
     const count = await loadProperties();
@@ -196,7 +196,7 @@ export default function App() {
       "It cannot be undone. Your Analytics data itself is not touched.",
     ].join("\n");
     if (!window.confirm(warning)) return;
-    if (!window.confirm("Last chance — permanently delete your account?")) return;
+    if (!window.confirm("Last chance - permanently delete your account?")) return;
     try {
       await deleteAccount();
       window.location.href = "/about";
@@ -299,7 +299,7 @@ export default function App() {
             <h3>Google blocked the sign-in: you are not a test user</h3>
             <p>
               The consent screen is in <b>Testing</b>, so only accounts on its test-user list may
-              connect — and that list belongs to the project that owns your OAuth client, not to
+              connect - and that list belongs to the project that owns your OAuth client, not to
               any other project you have configured.
             </p>
             <p>
@@ -348,7 +348,7 @@ export default function App() {
             <p>
               {status?.projectNumber ? (
                 <>
-                  That project is number <code>{status.projectNumber}</code> — this link opens
+                  That project is number <code>{status.projectNumber}</code> - this link opens
                   exactly it, so you cannot land on the wrong one:{" "}
                   <a
                     href={

@@ -32,7 +32,7 @@ import type { Property, PropertySummary, StatsPayload } from "./types.js";
 const app = express();
 app.disable("x-powered-by");
 // Behind a reverse proxy (Render, Fly, Caddy) req.protocol and req.ip are only
-// correct with this set — secure cookies and the rate limiter both depend on it.
+// correct with this set - secure cookies and the rate limiter both depend on it.
 if (process.env.TRUST_PROXY !== "0") app.set("trust proxy", 1);
 app.use(securityHeaders);
 app.use(express.json({ limit: "16kb" }));
@@ -156,7 +156,7 @@ app.get(
 );
 
 app.post("/api/auth/configure", (req, res) => {
-  // The setup panel writes to the server's filesystem — local development only.
+  // The setup panel writes to the server's filesystem - local development only.
   if (!env.allowSetupUi || !isLoopback(req)) {
     res.status(403).json({
       error:
@@ -219,7 +219,7 @@ app.get(
   }),
 );
 
-/** Full erasure — required by Google's user data policy. */
+/** Full erasure - required by Google's user data policy. */
 app.post(
   "/api/account/delete",
   requireUser,
@@ -296,7 +296,7 @@ app.get(
 
 /**
  * Homepage, privacy policy and terms. These are a hard requirement for Google
- * OAuth verification and are deliberately served with no session check — the
+ * OAuth verification and are deliberately served with no session check - the
  * reviewer visits them signed out, and a login wall fails the review.
  */
 if (fs.existsSync(env.siteDir)) {
@@ -340,17 +340,17 @@ const server = app.listen(env.port, env.host, async () => {
   if (purged > 0) console.log("[flotilla] cleared " + purged + " expired sessions");
 
   if (!isOAuthConfigured()) {
-    console.log("[flotilla] No OAuth client yet — click Connect in the UI to set one up.");
+    console.log("[flotilla] No OAuth client yet - click Connect in the UI to set one up.");
   }
   if (env.mock) {
-    console.log("[flotilla] MOCK enabled — users without a Google connection see demo data.");
+    console.log("[flotilla] MOCK enabled - users without a Google connection see demo data.");
   }
 });
 
 /**
  * Pick up hand-edited credentials on save. fs.watch fires "rename" as well as
  * "change" because many editors write via a temp file and swap it in, and it
- * can fire several times for one save — hence the debounce.
+ * can fire several times for one save - hence the debounce.
  */
 try {
   let pending: NodeJS.Timeout | null = null;
@@ -368,7 +368,7 @@ try {
     }, 250);
   }).unref();
 } catch {
-  // No env file to watch (credentials come from the environment) — fine.
+  // No env file to watch (credentials come from the environment) - fine.
 }
 
 // Expired sessions accumulate; sweep hourly rather than only at boot.

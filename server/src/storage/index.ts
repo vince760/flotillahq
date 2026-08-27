@@ -25,5 +25,5 @@ export async function getStorage(): Promise<Storage> {
   return instance;
 }
 
-/** Which adapter is active — reported at startup so it is never a guess. */
+/** Which adapter is active - reported at startup so it is never a guess. */
 export const storageKind = () => (process.env.DATABASE_URL ? "postgres" : "sqlite");

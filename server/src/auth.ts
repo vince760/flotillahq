@@ -48,7 +48,7 @@ export function authUrl(): { url: string; state: string } {
   const url = newClient().generateAuthUrl({
     state,
     access_type: "offline",
-    // Always ask, so Google always returns a refresh_token — without one a
+    // Always ask, so Google always returns a refresh_token - without one a
     // returning user would be stuck re-authorising on every visit.
     prompt: "consent",
     scope: SCOPES,
@@ -87,7 +87,7 @@ export async function completeSignIn(code: string): Promise<SignInResult> {
   // screen, and a user can untick optional ones. Tokens without the Analytics
   // scope are useless here, so refuse them rather than storing a dud and
   // failing later with an opaque error on every data call.
-  // OAuth scope strings are space-delimited by spec — no regex needed.
+  // OAuth scope strings are space-delimited by spec - no regex needed.
   const granted = (tokens.scope ?? "").split(" ").filter(Boolean);
   if (!granted.includes(ANALYTICS_SCOPE)) {
     return { user, missingScope: true };
@@ -193,7 +193,7 @@ export async function disconnect(userId: string): Promise<void> {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       });
     } catch {
-      // Already invalid on Google's side, or offline — local deletion still matters.
+      // Already invalid on Google's side, or offline - local deletion still matters.
     }
   }
   await storage.deleteTokens(userId);

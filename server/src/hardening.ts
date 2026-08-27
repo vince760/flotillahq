@@ -42,7 +42,7 @@ type Bucket = { count: number; resetAt: number };
 /**
  * Fixed-window limiter, per IP, in memory.
  *
- * In-memory is correct here only because SQLite pins us to a single instance —
+ * In-memory is correct here only because SQLite pins us to a single instance -
  * revisit alongside any move to Postgres and multiple replicas.
  */
 export function rateLimit(options: { windowMs: number; max: number; name: string }) {

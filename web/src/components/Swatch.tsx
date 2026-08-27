@@ -3,8 +3,8 @@ import { shapePath, type Identity } from "../lib/palette";
 type Props = { identity: Identity; size?: number; title?: string };
 
 /**
- * The legend/table key for a property. It mirrors the map marker exactly —
- * same hue, same shape — so identity never rests on colour alone.
+ * The legend/table key for a property. It mirrors the map marker exactly -
+ * same hue, same shape - so identity never rests on colour alone.
  */
 export function Swatch({ identity, size = 14, title }: Props) {
   const r = size / 2 - 1;

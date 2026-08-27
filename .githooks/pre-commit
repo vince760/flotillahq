@@ -23,14 +23,14 @@ staged=$(git diff --cached --name-only --diff-filter=ACMR)
 for f in $staged; do
   case "$f" in
     .env.example) ;;                                  # the safe template
-    .env|.env.*)          report "$f — environment file" ;;
-    *.key|*.pem|*.p12|*.pfx|*.jks|*.keystore) report "$f — key or certificate" ;;
-    data/*)               report "$f — runtime state (database, encryption key)" ;;
-    *.db|*.sqlite|*.sqlite3) report "$f — database file" ;;
+    .env|.env.*)          report "$f - environment file" ;;
+    *.key|*.pem|*.p12|*.pfx|*.jks|*.keystore) report "$f - key or certificate" ;;
+    data/*)               report "$f - runtime state (database, encryption key)" ;;
+    *.db|*.sqlite|*.sqlite3) report "$f - database file" ;;
     *credentials*.json|*client_secret*.json|*service-account*.json)
-                          report "$f — credential file" ;;
+                          report "$f - credential file" ;;
     .claude/*|CLAUDE.md|CLAUDE.local.md|.mcp.json)
-                          report "$f — local assistant configuration" ;;
+                          report "$f - local assistant configuration" ;;
   esac
 done
 
@@ -54,6 +54,15 @@ scan '(ENCRYPTION_KEY|SECRET|PASSWORD|TOKEN)[[:space:]]*[=:][[:space:]]*["'"'"']
      "hard-coded secret assignment"
 scan 'xox[baprs]-[A-Za-z0-9-]{10,}'                    "Slack token"
 scan 'gh[pousr]_[A-Za-z0-9]{30,}'                      "GitHub token"
+
+# --- 3. House style: never an em dash or en dash -----------------------------
+# A product rule, so it is enforced rather than remembered. Use a comma, a
+# colon, a full stop, or a spaced hyphen.
+dashes=$(git diff --cached -U0 --no-color | grep -nE "^\+" | grep -P "[\x{2013}\x{2014}]" || true)
+if [ -n "$dashes" ]; then
+  report "em or en dash in staged content"
+  printf "        %s\n" "$(printf '%s' "$dashes" | head -3 | cut -c1-110)"
+fi
 
 if [ "$fail" -ne 0 ]; then
   printf "\n%sCommit refused.%s This repository is public.\n" "$RED" "$OFF"

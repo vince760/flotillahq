@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-/** Element size, kept current with a ResizeObserver — charts need real pixels. */
+/** Element size, kept current with a ResizeObserver - charts need real pixels. */
 export function useMeasure<T extends HTMLElement>() {
   const ref = useRef<T | null>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });

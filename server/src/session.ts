@@ -16,7 +16,7 @@ declare global {
   }
 }
 
-/** Minimal cookie parsing — one header, no dependency. */
+/** Minimal cookie parsing - one header, no dependency. */
 function readCookie(req: Request, name: string): string | null {
   const header = req.headers.cookie;
   if (!header) return null;
@@ -75,7 +75,7 @@ export async function endSession(req: Request, res: Response): Promise<void> {
 }
 
 /**
- * Resolves the session on every request. Never rejects — routes that require a
+ * Resolves the session on every request. Never rejects - routes that require a
  * user use `requireUser`, so public routes stay public.
  */
 export async function attachUser(req: Request, _res: Response, next: NextFunction): Promise<void> {

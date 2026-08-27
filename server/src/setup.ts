@@ -22,8 +22,8 @@ export function validateCredentials(clientId: string, clientSecret: string): Set
 }
 
 /**
- * Upsert the two OAuth keys in the repo-root .env, leaving every other line —
- * comments included — exactly as the user left it.
+ * Upsert the two OAuth keys in the repo-root .env, leaving every other line -
+ * comments included - exactly as the user left it.
  */
 export function persistCredentials(clientId: string, clientSecret: string): void {
   const values: Record<string, string> = {

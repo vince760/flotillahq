@@ -28,12 +28,12 @@ export type Outcome = {
  * Idle multipliers against the base interval: 15s, 15s, 30s, 1m, then 2m.
  *
  * Capped at 2 minutes deliberately. A longer ceiling would save more quota, but
- * it also sets how long a brand new viewer stays invisible on a quiet property —
+ * it also sets how long a brand new viewer stays invisible on a quiet property -
  * and a dashboard that calls itself "live" cannot be five minutes behind. Real
  * quota pressure is handled below, where it is measured rather than guessed.
  */
 const IDLE_MULTIPLIERS = [1, 1, 2, 4, 8];
-/** Error backoff is absolute, not a multiplier — a broken property can wait. */
+/** Error backoff is absolute, not a multiplier - a broken property can wait. */
 const ERROR_BACKOFF_MS = [30_000, 60_000, 120_000, 300_000, 900_000];
 /** Below this share of hourly tokens left, slow everything down. */
 const QUOTA_LOW = 0.15;

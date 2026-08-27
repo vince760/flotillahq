@@ -24,7 +24,7 @@ const snapshots = new Map<string, Snapshot>();
 
 const keyFor = (userId: string, propertyId: string) => userId + ":" + propertyId;
 
-/** Bounded concurrency — Google caps concurrent Data API requests per property. */
+/** Bounded concurrency - Google caps concurrent Data API requests per property. */
 async function pool<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>): Promise<R[]> {
   const results = new Array<R>(items.length);
   let cursor = 0;
@@ -103,7 +103,7 @@ export async function collectRealtime(
   };
 }
 
-/** Drop everything for a user — used on disconnect and account deletion. */
+/** Drop everything for a user - used on disconnect and account deletion. */
 export function forgetUser(userId: string): void {
   const prefix = userId + ":";
   for (const key of snapshots.keys()) if (key.startsWith(prefix)) snapshots.delete(key);

@@ -927,7 +927,7 @@ table.data td.truncate {
   text-decoration: underline;
 }
 
-/* A button that reads as a link — the destructive action should not look like a
+/* A button that reads as a link - the destructive action should not look like a
    primary call to action sitting in the footer. */
 .app-foot .linklike {
   border: 0;

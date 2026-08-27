@@ -12,7 +12,7 @@ type Props = {
 
 /**
  * Small multiples, one card per property. Each card carries a single series, so
- * it needs no legend of its own and never puts two hues on one plot — which is
+ * it needs no legend of its own and never puts two hues on one plot - which is
  * what keeps identity readable no matter how many properties there are.
  */
 export function PropertyCards({ properties, stats, realtime }: Props) {
