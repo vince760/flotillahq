@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Flotilla">
+  <title>Flotilla</title>
+  <!--
+    A flotilla: three sails of different sizes on the water. The name rendered
+    literally, which beats an abstract mark for recall in a crowded tab strip.
+
+    Tuned for 16px, where a favicon actually lives. The sails are deliberately
+    oversized against the tile and there is no border stroke, because at that
+    size a 1px rule costs more legibility than it adds. Colours are the product
+    palette: the deep end of the blue ramp for the tile, with the yellow and
+    blue series hues for the sails.
+  -->
+  <rect width="64" height="64" rx="14" fill="#0d366b"/>
+  <path d="M13 43 L13 21 L26 43 Z" fill="#eda100"/>
+  <path d="M28.5 43 L28.5 10 L47 43 Z" fill="#fcfcfb"/>
+  <path d="M49 43 L49 25 L59 43 Z" fill="#3987e5"/>
+  <rect x="7" y="47" width="50" height="4.5" rx="2.25" fill="#3987e5"/>
+</svg>

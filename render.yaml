@@ -17,7 +17,7 @@ services:
     region: oregon
 
     healthCheckPath: /healthz
-    autoDeploy: false
+    autoDeploy: true
 
     envVars:
       - key: NODE_ENV
