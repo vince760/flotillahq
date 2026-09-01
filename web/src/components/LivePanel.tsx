@@ -1,6 +1,7 @@
 import type { Property, Realtime } from "../api";
 import { identityFor } from "../lib/palette";
 import { clockTime, full } from "../lib/format";
+import { SiteIcon } from "./SiteIcon";
 import { Swatch } from "./Swatch";
 
 type Props = {
@@ -24,6 +25,12 @@ export function LivePanel({ properties, realtime, hidden, onToggle, onShowAll }:
 
   const filtered = hidden.size > 0;
 
+  // Unlike the cards and tables, the legend keeps its swatch: it is the one
+  // place that ties a property's name to the exact mark drawn on the map. The
+  // favicon joins it as a second column instead of replacing it, and only when
+  // at least one property has a domain, so all-app accounts lose no width.
+  const showIcons = properties.some((p) => p.domain);
+
   return (
     <div className="card" style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
       <div className="hero">
@@ -45,12 +52,14 @@ export function LivePanel({ properties, realtime, hidden, onToggle, onShowAll }:
           return (
             <button
               key={property.id}
-              className={"legend-row" + (off ? " off" : "")}
+              className={"legend-row" + (off ? " off" : "") + (showIcons ? " icons" : "")}
               onClick={() => onToggle(property.id)}
               aria-pressed={!off}
               title={off ? "Show on map" : "Hide from map"}
             >
-              <Swatch identity={identity} size={16} title={identity.shape} />
+              {/* Circle to match the map, which no longer draws shape variants. */}
+              <Swatch identity={{ ...identity, shape: "circle" }} size={16} />
+              {showIcons ? <SiteIcon property={property} size={16} fallback="spacer" /> : null}
               <span className="name">
                 {property.name}
                 {property.account ? <span className="account">{property.account}</span> : null}

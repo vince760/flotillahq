@@ -384,6 +384,12 @@ button {
   cursor: pointer;
 }
 
+/* An extra fixed column for the favicon, so names align whether or not a
+   given property has one (SiteIcon renders a same-size spacer when it does not). */
+.legend-row.icons {
+  grid-template-columns: 20px 16px minmax(0, 1fr) auto;
+}
+
 .legend-row:hover {
   background: var(--surface-2);
 }
@@ -651,6 +657,12 @@ table.data td.truncate {
 .swatch-cell {
   width: 18px;
   padding-right: 8px;
+}
+
+.site-icon {
+  display: block;
+  flex: none;
+  border-radius: 3px;
 }
 
 /* --- Tooltip -------------------------------------------------------------- */

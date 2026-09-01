@@ -15,7 +15,9 @@ export function securityHeaders(_req: Request, res: Response, next: NextFunction
       "default-src 'self'",
       "script-src 'self'",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data:",
+      // Google's favicon service renders each property's site icon; the
+      // browser fetches it directly, so it needs an img-src carve-out.
+      "img-src 'self' data: https://www.google.com",
       "font-src 'self'",
       // The dashboard calls its own API only; Google is contacted server-side.
       "connect-src 'self'",

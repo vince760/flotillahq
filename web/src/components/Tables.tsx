@@ -1,7 +1,6 @@
 import type { MapPoint, Property, Stats } from "../api";
-import { identityFor } from "../lib/palette";
 import { compact, duration, full, percent } from "../lib/format";
-import { Swatch } from "./Swatch";
+import { SiteIcon } from "./SiteIcon";
 
 /** Flatten a per-property breakdown into one ranked list. */
 function ranked(
@@ -60,7 +59,7 @@ function Panel({
           <table className="data">
             <thead>
               <tr>
-                <th className="swatch-cell" aria-label="Property colour" />
+                <th className="swatch-cell" aria-label="Property icon" />
                 <th>Property</th>
                 <th>{head}</th>
                 <th className="num">{metric}</th>
@@ -70,7 +69,7 @@ function Panel({
               {rows.map((row, i) => (
                 <tr key={row.property.id + "|" + row.name + "|" + i}>
                   <td className="swatch-cell">
-                    <Swatch identity={identityFor(row.property.slot)} size={12} />
+                    <SiteIcon property={row.property} size={12} />
                   </td>
                   <td style={{ whiteSpace: "nowrap" }}>{row.property.name}</td>
                   <td className="truncate" title={row.name}>
@@ -117,7 +116,7 @@ export function LocationTable({
           <table className="data">
             <thead>
               <tr>
-                <th className="swatch-cell" aria-label="Property colour" />
+                <th className="swatch-cell" aria-label="Property icon" />
                 <th>Property</th>
                 <th>City</th>
                 <th>Country</th>
@@ -130,7 +129,7 @@ export function LocationTable({
                 return (
                   <tr key={row.propertyId + row.city + i}>
                     <td className="swatch-cell">
-                      <Swatch identity={identityFor(property.slot)} size={12} />
+                      <SiteIcon property={property} size={12} />
                     </td>
                     <td style={{ whiteSpace: "nowrap" }}>{property.name}</td>
                     <td>
@@ -172,7 +171,7 @@ export function TotalsTable({
         <table className="data">
           <thead>
             <tr>
-              <th className="swatch-cell" aria-label="Property colour" />
+              <th className="swatch-cell" aria-label="Property icon" />
               <th>Property</th>
               <th className="num">Users</th>
               <th className="num">Prev. users</th>
@@ -189,7 +188,7 @@ export function TotalsTable({
               return (
                 <tr key={property.id}>
                   <td className="swatch-cell">
-                    <Swatch identity={identityFor(property.slot)} size={12} />
+                    <SiteIcon property={property} size={12} />
                   </td>
                   <td style={{ whiteSpace: "nowrap" }}>{property.name}</td>
                   <td className="num">{stat ? full(stat.current.activeUsers) : "-"}</td>

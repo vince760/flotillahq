@@ -1,8 +1,8 @@
 import type { Property, PropertyStats, Realtime, Stats } from "../api";
 import { identityFor } from "../lib/palette";
 import { bucketLabel, compact, delta, duration, full, percent } from "../lib/format";
+import { SiteIcon } from "./SiteIcon";
 import { Sparkline } from "./Sparkline";
-import { Swatch } from "./Swatch";
 
 type Props = {
   properties: Property[];
@@ -30,7 +30,7 @@ export function PropertyCards({ properties, stats, realtime }: Props) {
         return (
           <div className="card pcard" key={property.id}>
             <div className="pcard-head">
-              <Swatch identity={identity} size={16} title={identity.shape} />
+              <SiteIcon property={property} size={16} />
               <div className="title">
                 <div className="name" title={property.name}>
                   {property.name}

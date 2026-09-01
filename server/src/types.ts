@@ -3,6 +3,8 @@ export type PropertySummary = {
   id: string; // numeric GA4 property id, e.g. "123456789"
   name: string;
   account: string;
+  /** Host of the property's first web data stream. Absent for app-only properties. */
+  domain?: string;
 };
 
 export type Property = PropertySummary & {

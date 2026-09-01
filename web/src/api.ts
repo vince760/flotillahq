@@ -1,4 +1,11 @@
-export type Property = { id: string; name: string; account: string; slot: number };
+export type Property = {
+  id: string;
+  name: string;
+  account: string;
+  slot: number;
+  /** Host of the property's web data stream. Absent for app-only properties. */
+  domain?: string;
+};
 
 export type MapPoint = {
   propertyId: string;

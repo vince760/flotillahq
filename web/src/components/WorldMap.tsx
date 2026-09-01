@@ -35,7 +35,7 @@ type Transform = { k: number; x: number; y: number };
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
 /** Area-proportional, with a floor so a single viewer is still a visible mark. */
-const radiusFor = (users: number) => clamp(4 + Math.sqrt(users) * 1.6, 4, 20);
+const radiusFor = (users: number) => clamp(2.5 + Math.sqrt(users), 2.5, 11);
 
 type Props = {
   points: MapPoint[];
@@ -239,7 +239,9 @@ export function WorldMap({ points, properties, hidden, loading }: Props) {
                   return (
                     <path
                       key={entry.property.id}
-                      d={shapePath(entry.identity.shape, radii[i])}
+                      // Always a circle: colour alone carries identity on the
+                      // map, the marker shapes read as noise at these sizes.
+                      d={shapePath("circle", radii[i])}
                       transform={`translate(${dx} ${dy})`}
                       fill={entry.identity.color}
                       fillOpacity={0.92}

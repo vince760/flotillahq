@@ -15,13 +15,15 @@ import type {
  * is used when real credentials are configured.
  */
 
-const MOCK_PROPERTIES = [
-  { id: "900000001", name: "Acme Storefront", account: "Acme Group" },
-  { id: "900000002", name: "Acme Docs", account: "Acme Group" },
-  { id: "900000003", name: "Acme Blog", account: "Acme Group" },
+// "Northwind App" deliberately has no domain: it plays the app-only property,
+// so the swatch fallback stays visible in the demo.
+const MOCK_PROPERTIES: PropertySummary[] = [
+  { id: "900000001", name: "Acme Storefront", account: "Acme Group", domain: "shop.example.com" },
+  { id: "900000002", name: "Acme Docs", account: "Acme Group", domain: "docs.example.com" },
+  { id: "900000003", name: "Acme Blog", account: "Acme Group", domain: "blog.example.com" },
   { id: "900000004", name: "Northwind App", account: "Northwind" },
-  { id: "900000005", name: "Northwind Marketing", account: "Northwind" },
-  { id: "900000006", name: "Contoso Labs", account: "Contoso" },
+  { id: "900000005", name: "Northwind Marketing", account: "Northwind", domain: "northwind.example" },
+  { id: "900000006", name: "Contoso Labs", account: "Contoso", domain: "labs.contoso.example" },
 ];
 
 const CITIES: { countryId: string; country: string; city: string; weight: number }[] = [

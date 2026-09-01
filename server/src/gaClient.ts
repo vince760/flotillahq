@@ -107,7 +107,41 @@ export async function listProperties(token: string): Promise<PropertySummary[]> 
     pageToken = page.nextPageToken;
   } while (pageToken);
 
+  // One dataStreams call per property, bounded like the Data API fan-out below.
+  // The result is cached upstream with the listing, so this runs once per TTL.
+  const domains = await pool(found, 5, (p) => domainFor(token, p.id));
+  domains.forEach((domain, i) => {
+    if (domain) found[i].domain = domain;
+  });
+
   return found;
+}
+
+/**
+ * Host of the property's first web data stream, used by the client to render
+ * the site's favicon. App-only (iOS/Android) properties have no web stream.
+ */
+async function domainFor(token: string, propertyId: string): Promise<string | undefined> {
+  type DataStream = { webStreamData?: { defaultUri?: string } };
+  const url = ADMIN_API + "/properties/" + propertyId + "/dataStreams?pageSize=200";
+
+  try {
+    const page = await gaFetch<{ dataStreams?: DataStream[] }>(token, url);
+    for (const stream of page.dataStreams ?? []) {
+      const uri = stream.webStreamData?.defaultUri;
+      if (!uri) continue;
+      try {
+        // GA stores the URI with a scheme, but tolerate a bare hostname.
+        return new URL(uri.includes("://") ? uri : "https://" + uri).hostname;
+      } catch {
+        /* malformed URI on this stream - try the next one */
+      }
+    }
+  } catch {
+    // A property whose streams we cannot read still renders; it just keeps
+    // its colour/shape swatch instead of a favicon.
+  }
+  return undefined;
 }
 
 /** Run tasks with bounded concurrency - Google caps concurrent Data API requests. */
