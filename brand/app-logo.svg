@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Flotilla">
+  <title>Flotilla</title>
+  <!--
+    App logo for the Google OAuth consent screen. Same mark as
+    web/public/favicon.svg, but full-bleed (Google applies its own rounding or
+    circle crop) with the sails pulled in so nothing clips under a circle mask.
+  -->
+  <rect width="64" height="64" fill="#0d366b"/>
+  <g transform="translate(32 32) scale(0.82) translate(-33 -30.75)">
+    <path d="M13 43 L13 21 L26 43 Z" fill="#eda100"/>
+    <path d="M28.5 43 L28.5 10 L47 43 Z" fill="#fcfcfb"/>
+    <path d="M49 43 L49 25 L59 43 Z" fill="#3987e5"/>
+    <rect x="7" y="47" width="50" height="4.5" rx="2.25" fill="#3987e5"/>
+  </g>
+</svg>

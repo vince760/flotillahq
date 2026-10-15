@@ -1,0 +1,79 @@
+1
+00:00:00,000 --> 00:00:06,564
+This is Flotilla, a read-only dashboard that shows a user's Google Analytics 4 properties on one screen.
+
+2
+00:00:06,564 --> 00:00:11,739
+The signed-in user clicks Sign in with Google to connect their Analytics account.
+
+3
+00:00:12,440 --> 00:00:14,800
+This starts Google's OAuth flow.
+
+4
+00:00:14,800 --> 00:00:18,489
+The address bar shows Flotilla's OAuth client ID.
+
+5
+00:00:18,489 --> 00:00:22,030
+The user chooses the Google account to connect.
+
+6
+00:00:22,729 --> 00:00:28,668
+Flotilla is pending verification, so Google shows the unverified app screen.
+
+7
+00:00:28,668 --> 00:00:33,199
+The user selects Advanced, then continues to Flotilla HQ.
+
+8
+00:00:33,900 --> 00:00:39,086
+First, Sign in with Google uses the open ID, email, and profile scopes.
+
+9
+00:00:39,086 --> 00:00:45,150
+Flotilla uses these only to identify the user and show which account is connected.
+
+10
+00:00:45,849 --> 00:00:50,111
+Next, Flotilla requests the sensitive scope, analytics.
+
+11
+00:00:50,111 --> 00:00:55,458
+readonly, shown here as: See and download your Google Analytics data.
+
+12
+00:00:55,458 --> 00:00:59,875
+This is the only Analytics permission Flotilla asks for.
+
+13
+00:00:59,875 --> 00:01:02,509
+The user grants it and continues.
+
+14
+00:01:03,209 --> 00:01:12,888
+Flotilla uses this scope to list the GA4 properties the user can access, and to run read-only reports with the Google Analytics Data API.
+
+15
+00:01:12,888 --> 00:01:20,164
+That includes live visitors, users, sessions, page views, engagement, top pages, and traffic channels.
+
+16
+00:01:20,164 --> 00:01:23,767
+This data is only displayed to the signed-in user.
+
+17
+00:01:23,767 --> 00:01:29,560
+Flotilla never modifies Analytics settings or data, and never sells or shares it.
+
+18
+00:01:30,259 --> 00:01:32,272
+Users can sign out at any time.
+
+19
+00:01:32,272 --> 00:01:40,389
+The Disconnect button revokes Google access and deletes the stored tokens, and Delete account erases all of the user's data.
+
+20
+00:01:40,389 --> 00:01:44,869
+Access can also be revoked from the Google Account permissions page.

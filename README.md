@@ -1,4 +1,4 @@
-# Flotilla
+# FlotillaHQ
 
 Every Google Analytics property you can see, on one screen. Live viewers plotted on
 a world map - each property in its own colour and marker shape - with the stats

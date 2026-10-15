@@ -213,7 +213,7 @@ export default function App() {
     <div className="shell">
       <header className="topbar">
         <div className="brand">
-          <h1>Flotilla</h1>
+          <h1>FlotillaHQ</h1>
           <span className="sub">every Google Analytics property, one screen</span>
         </div>
 

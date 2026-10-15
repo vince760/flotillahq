@@ -66,6 +66,7 @@ build/
 # Editors and operating systems
 # =============================================================================
 .vscode/
+.vs/
 .idea/
 *.swp
 *.swo
