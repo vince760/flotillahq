@@ -2,25 +2,29 @@ import type { NextFunction, Request, Response } from "express";
 import { env } from "./env.js";
 
 /**
- * Security headers. The app serves only its own bundle and talks only to its
- * own origin, so the policy can be strict.
+ * Security headers. The app serves its own bundle plus Google Analytics 4, and
+ * talks only to its own origin and GA4's collection endpoints.
  *
  * `style-src` needs 'unsafe-inline' because React sets inline style attributes;
- * scripts are bundled files with no inline execution, so script-src stays tight.
+ * scripts are files with no inline execution, so script-src stays tight.
  */
 export function securityHeaders(_req: Request, res: Response, next: NextFunction): void {
   res.setHeader(
     "Content-Security-Policy",
     [
       "default-src 'self'",
-      "script-src 'self'",
+      // Google Analytics 4 (gtag.js) loads from Tag Manager; its bootstrap is
+      // /gtag-init.js, so no inline script is needed.
+      "script-src 'self' https://*.googletagmanager.com",
       "style-src 'self' 'unsafe-inline'",
       // Google's favicon service renders each property's site icon; the
       // browser fetches it directly, so it needs an img-src carve-out.
-      "img-src 'self' data: https://www.google.com",
+      // The analytics hosts cover GA4's pixel fallbacks.
+      "img-src 'self' data: https://www.google.com https://*.google-analytics.com https://*.googletagmanager.com",
       "font-src 'self'",
-      // The dashboard calls its own API only; Google is contacted server-side.
-      "connect-src 'self'",
+      // The dashboard's data comes from its own API (Google is contacted
+      // server-side); the browser itself only sends GA4 measurement hits.
+      "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
