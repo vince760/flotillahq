@@ -8,7 +8,7 @@ export type PropertySummary = {
 };
 
 export type Property = PropertySummary & {
-  slot: number; // stable per-user identity slot -> colour + marker shape
+  slot: number; // rank in the user's first-seen property order -> colour + marker shape
 };
 
 export type MapPoint = {

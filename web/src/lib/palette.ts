@@ -3,19 +3,19 @@
  *
  * A map is an "all-pairs" form: any two markers can end up side by side, so the
  * palette has to hold up across every pair, not just neighbours in a legend.
- * Validated with the data-viz palette checker, only four of the eight documented
- * hues clear that bar together (worst all-pairs CVD dE 9.2 light / 6.9 dark), so
- * colour alone tops out at four properties.
+ * Validated with the data-viz palette checker, only the first four hues clear
+ * that bar together (worst all-pairs CVD dE 9.2 light / 6.9 dark).
  *
- * Shape is therefore a permanent second channel rather than an overflow hatch:
- * it carries identity where colour cannot, and it is what makes the dark-mode
- * pair in the 6-8 warn band legitimate. Four colours x four shapes distinguishes
- * sixteen properties without ever inventing a ninth hue.
+ * Even so, no two properties share a colour: a repeated hue reads as "same
+ * project" no matter what shape it wears. Hues 5-8 are ordered to stay as far
+ * from the first four as possible for normal vision, and from the fifth
+ * property on the shape changes too, so colour-blind readers keep a second
+ * channel where those later hues sit close to an earlier one.
  */
 
 export const SERIES_HEX = {
-  light: ["#2a78d6", "#eda100", "#e87ba4", "#008300"],
-  dark: ["#3987e5", "#c98500", "#d55181", "#008300"],
+  light: ["#2a78d6", "#eda100", "#e87ba4", "#008300", "#1baf7a", "#eb6834", "#6250d6", "#e34948"],
+  dark: ["#3987e5", "#c98500", "#d55181", "#008300", "#199e70", "#d95926", "#9085e9", "#e66767"],
 } as const;
 
 export const SHAPES = ["circle", "square", "triangle", "diamond"] as const;
@@ -30,10 +30,18 @@ export type Identity = {
   shape: Shape;
 };
 
-/** Stable: driven by the server-assigned slot, never by position in a list. */
+/**
+ * Driven by the server-assigned slot, which is the property's rank among the
+ * user's properties in first-seen order - never by position in a filtered list,
+ * so hiding a property never repaints the others.
+ *
+ * Colour cycles every eight, shape every four: slots 0-7 all get distinct
+ * colours, and (colour, shape) stays unique through slot 15.
+ */
 export function identityFor(slot: number): Identity {
-  const colorIndex = ((slot % COLOR_COUNT) + COLOR_COUNT) % COLOR_COUNT;
-  const shapeIndex = Math.floor(Math.abs(slot) / COLOR_COUNT) % SHAPES.length;
+  const s = Math.abs(slot);
+  const colorIndex = s % COLOR_COUNT;
+  const shapeIndex = Math.floor(s / 4) % SHAPES.length;
   return {
     color: "var(--series-" + (colorIndex + 1) + ")",
     colorIndex,

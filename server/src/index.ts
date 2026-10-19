@@ -87,9 +87,13 @@ async function propertiesFor(userId: string): Promise<Property[]> {
     userId,
     summaries.map((p) => p.id),
   );
+  // Stored slots only grow (a removed property keeps its number), so hand the
+  // client each property's rank instead: first-seen order is preserved, but the
+  // numbers stay dense and no two current properties ever share a colour.
   return summaries
     .map((p) => ({ ...p, slot: slots.get(p.id) ?? 0 }))
-    .sort((a, b) => a.slot - b.slot);
+    .sort((a, b) => a.slot - b.slot)
+    .map((p, rank) => ({ ...p, slot: rank }));
 }
 
 /** Liveness probe for the platform. No auth, no database work on the hot path. */
