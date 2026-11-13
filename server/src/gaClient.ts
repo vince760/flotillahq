@@ -50,27 +50,65 @@ const num = (v: string | undefined) => {
 const dim = (row: ReportRow, i: number) => row.dimensionValues?.[i]?.value ?? "";
 const met = (row: ReportRow, i: number) => num(row.metricValues?.[i]?.value);
 
+const describe = (err: unknown) => (err instanceof Error ? err.message : String(err));
+
+/**
+ * Statuses worth one quick retry. Google's edge answers the odd request with a
+ * 5xx (an HTML "Error 502" page, not the API's JSON) that clears within a
+ * second; a persistent outage is left to the scheduler's backoff instead.
+ */
+const TRANSIENT_STATUSES = new Set([500, 502, 503, 504]);
+const RETRY_DELAY_MS = 1_000;
+const MAX_ATTEMPTS = 2;
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * A failed response as a message fit for a property card. The API itself
+ * answers in JSON; anything else (Google's HTML error pages) is described by
+ * status only - the body must never be shown verbatim.
+ */
+async function errorMessage(res: Response): Promise<string> {
+  const text = await res.text();
+  try {
+    const parsed = JSON.parse(text) as { error?: { message?: string } };
+    if (parsed.error?.message) return parsed.error.message;
+  } catch {
+    /* not JSON */
+  }
+  const reason = res.statusText || (res.status >= 500 ? "Server Error" : "Error");
+  const hint =
+    res.status >= 500 ? " Temporary on Google's side; it refreshes automatically." : "";
+  return `Google Analytics responded with HTTP ${res.status} (${reason}).${hint}`;
+}
+
 async function gaFetch<T>(token: string, url: string, body?: unknown): Promise<T> {
-  const res = await fetch(url, {
+  const init: RequestInit = {
     method: body ? "POST" : "GET",
     headers: {
       Authorization: "Bearer " + token,
       ...(body ? { "Content-Type": "application/json" } : {}),
     },
     body: body ? JSON.stringify(body) : undefined,
-  });
+  };
 
-  if (!res.ok) {
-    const text = await res.text();
-    let message = text.slice(0, 400);
+  let res: Response | undefined;
+  let failure: unknown;
+  for (let attempt = 1; ; attempt++) {
     try {
-      const parsed = JSON.parse(text) as { error?: { message?: string } };
-      if (parsed.error?.message) message = parsed.error.message;
-    } catch {
-      /* keep the raw body */
+      res = await fetch(url, init);
+    } catch (err) {
+      res = undefined; // dropped connection, DNS, etc. - as transient as a 5xx
+      failure = err;
     }
-    throw new HttpError(res.status, message);
+    const transient = res === undefined || TRANSIENT_STATUSES.has(res.status);
+    if (!transient || attempt >= MAX_ATTEMPTS) break;
+    await res?.arrayBuffer().catch(() => undefined); // release the socket before retrying
+    await sleep(RETRY_DELAY_MS);
   }
+
+  if (!res) throw new HttpError(502, "Could not reach Google Analytics: " + describe(failure));
+  if (!res.ok) throw new HttpError(res.status, await errorMessage(res));
   return (await res.json()) as T;
 }
 
@@ -158,7 +196,6 @@ async function pool<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>
   return results;
 }
 
-const describe = (err: unknown) => (err instanceof Error ? err.message : String(err));
 
 // -- Realtime ----------------------------------------------------------------
 
