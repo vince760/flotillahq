@@ -2,6 +2,21 @@ import type { NextFunction, Request, Response } from "express";
 import { env } from "./env.js";
 
 /**
+ * Every host the served gtag.js can send GA4 measurement hits to. gtag.js is
+ * loaded live from Google's CDN, so this set changes under us without a deploy
+ * (which is how the policy silently broke once already). Note that
+ * `*.example.com` never matches the apex `example.com`, so apex hosts are
+ * listed on their own.
+ */
+const ga4Hosts = [
+  "https://*.google-analytics.com", // www. and region1. collectors
+  "https://analytics.google.com", // apex collector
+  "https://*.analytics.google.com", // regional collectors
+  "https://www.google.com", // Google-signals hit (/g/collect) and consent-mode geo lookup
+  "https://stats.g.doubleclick.net", // Google-signals hit
+].join(" ");
+
+/**
  * Security headers. The app serves its own bundle plus Google Analytics 4, and
  * talks only to its own origin and GA4's collection endpoints.
  *
@@ -17,14 +32,15 @@ export function securityHeaders(_req: Request, res: Response, next: NextFunction
       // /gtag-init.js, so no inline script is needed.
       "script-src 'self' https://*.googletagmanager.com",
       "style-src 'self' 'unsafe-inline'",
-      // Google's favicon service renders each property's site icon; the
-      // browser fetches it directly, so it needs an img-src carve-out.
-      // The analytics hosts cover GA4's pixel fallbacks.
-      "img-src 'self' data: https://www.google.com https://*.google-analytics.com https://*.googletagmanager.com",
+      // Google's favicon service (www.google.com/s2/favicons, a host already in
+      // ga4Hosts) renders each property's site icon. It 301s to
+      // t0-t3.gstatic.com, and CSP checks the redirect target as well. The
+      // GA4 hosts also cover gtag's image-pixel fallback.
+      `img-src 'self' data: https://*.gstatic.com ${ga4Hosts} https://*.googletagmanager.com`,
       "font-src 'self'",
       // The dashboard's data comes from its own API (Google is contacted
       // server-side); the browser itself only sends GA4 measurement hits.
-      "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
+      `connect-src 'self' ${ga4Hosts} https://*.googletagmanager.com`,
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
