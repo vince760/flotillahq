@@ -59,9 +59,19 @@ const describe = (err: unknown) => (err instanceof Error ? err.message : String(
  */
 const TRANSIENT_STATUSES = new Set([500, 502, 503, 504]);
 const RETRY_DELAY_MS = 1_000;
+/** Concurrency slots free up as in-flight reports finish, which takes a little longer. */
+const CONCURRENCY_RETRY_DELAY_MS = 2_000;
 const MAX_ATTEMPTS = 2;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Google rejects a request outright, with 429, when a property already has 10
+ * reports executing (see `coreGate`). Unlike a token quota, which stays empty
+ * for the rest of the hour, this clears as soon as those reports finish.
+ */
+const isConcurrencyLimit = (status: number, message: string) =>
+  status === 429 && /concurrent/i.test(message);
 
 /**
  * A failed response as a message fit for a property card. The API itself
@@ -92,24 +102,34 @@ async function gaFetch<T>(token: string, url: string, body?: unknown): Promise<T
     body: body ? JSON.stringify(body) : undefined,
   };
 
-  let res: Response | undefined;
-  let failure: unknown;
   for (let attempt = 1; ; attempt++) {
+    let res: Response;
     try {
       res = await fetch(url, init);
     } catch (err) {
-      res = undefined; // dropped connection, DNS, etc. - as transient as a 5xx
-      failure = err;
+      // Dropped connection, DNS, etc. - as transient as a 5xx.
+      if (attempt < MAX_ATTEMPTS) {
+        await sleep(RETRY_DELAY_MS);
+        continue;
+      }
+      throw new HttpError(502, "Could not reach Google Analytics: " + describe(err));
     }
-    const transient = res === undefined || TRANSIENT_STATUSES.has(res.status);
-    if (!transient || attempt >= MAX_ATTEMPTS) break;
-    await res?.arrayBuffer().catch(() => undefined); // release the socket before retrying
-    await sleep(RETRY_DELAY_MS);
-  }
+    if (res.ok) return (await res.json()) as T;
 
-  if (!res) throw new HttpError(502, "Could not reach Google Analytics: " + describe(failure));
-  if (!res.ok) throw new HttpError(res.status, await errorMessage(res));
-  return (await res.json()) as T;
+    // Reading the body also releases the socket before any retry.
+    const message = await errorMessage(res);
+    if (attempt < MAX_ATTEMPTS) {
+      if (TRANSIENT_STATUSES.has(res.status)) {
+        await sleep(RETRY_DELAY_MS);
+        continue;
+      }
+      if (isConcurrencyLimit(res.status, message)) {
+        await sleep(CONCURRENCY_RETRY_DELAY_MS);
+        continue;
+      }
+    }
+    throw new HttpError(res.status, message);
+  }
 }
 
 /** Every GA4 property the signed-in account can read, across all accounts. */
@@ -196,6 +216,60 @@ async function pool<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>
   return results;
 }
 
+/**
+ * Bounded per-property concurrency for the Core (historical) Data API.
+ *
+ * Google allows 10 concurrently executing Core requests per property and
+ * counts every report in a batch separately, so one stats batch (4 reports)
+ * for two date ranges at once already uses 8. A third range - a user clicking
+ * through the range tabs - tips the property into "Exhausted concurrent
+ * requests quota". Work is queued here, in order, so the app never exceeds the
+ * limit on its own; contention from other API clients on the same property is
+ * left to gaFetch's retry. Realtime has its own, separate bucket and already
+ * runs at most one request per property at a time.
+ */
+const CORE_CONCURRENCY_PER_PROPERTY = 8;
+
+class Gate {
+  private inUse = 0;
+  private queue: { cost: number; start: () => void }[] = [];
+
+  constructor(private readonly capacity: number) {}
+
+  async run<T>(cost: number, task: () => Promise<T>): Promise<T> {
+    // A task larger than the whole gate would otherwise wait forever.
+    const slots = Math.min(cost, this.capacity);
+    await new Promise<void>((start) => {
+      this.queue.push({ cost: slots, start });
+      this.drain();
+    });
+    try {
+      return await task();
+    } finally {
+      this.inUse -= slots;
+      this.drain();
+    }
+  }
+
+  /** Start queued work, in order, while it fits. */
+  private drain(): void {
+    while (this.queue.length > 0 && this.inUse + this.queue[0].cost <= this.capacity) {
+      const next = this.queue.shift()!;
+      this.inUse += next.cost;
+      next.start();
+    }
+  }
+}
+
+const coreGates = new Map<string, Gate>();
+function coreGate(propertyId: string): Gate {
+  let gate = coreGates.get(propertyId);
+  if (!gate) {
+    gate = new Gate(CORE_CONCURRENCY_PER_PROPERTY);
+    coreGates.set(propertyId, gate);
+  }
+  return gate;
+}
 
 // -- Realtime ----------------------------------------------------------------
 
@@ -355,10 +429,12 @@ async function statsForProperty(
       ],
     };
 
-    const { reports = [] } = await gaFetch<BatchReports>(
-      token,
-      DATA_API + "/properties/" + property.id + ":batchRunReports",
-      body,
+    const { reports = [] } = await coreGate(property.id).run(body.requests.length, () =>
+      gaFetch<BatchReports>(
+        token,
+        DATA_API + "/properties/" + property.id + ":batchRunReports",
+        body,
+      ),
     );
 
     // With two named date ranges the API appends a `dateRange` dimension whose
